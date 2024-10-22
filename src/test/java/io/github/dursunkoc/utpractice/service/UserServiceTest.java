@@ -52,7 +52,7 @@ class UserServiceTest {
     void testCreateUserWhenRequestIsValidShouldReturnNonNull() {
         UserWrite userWrite = validRequest();
         when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
-
+        when(userRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
         User user = userService.createUser(userWrite);
 
         assertNotNull(user);
@@ -89,7 +89,8 @@ class UserServiceTest {
         // Arrange
         final var userWrite = validRequest();
         when(userRepository.findByUsername(userWrite.username())).thenReturn(Optional.empty());
-        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
+        when(userValidatorService.isValid(argThat(s -> s.equals(userWrite.username())))).thenReturn(true);
+        when(userRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
         // Act
         final var user = userService.createUser(userWrite);
         // Assert

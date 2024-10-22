@@ -24,7 +24,8 @@ public class UserService {
             User user = existingUserOpt.get();
             var updated = user.updateFrom(userWrite);
             return userRepository.update(updated);
+        }else{
+            return userRepository.save(User.from(userWrite));
         }
-        return User.from(userWrite);
     }
 }
