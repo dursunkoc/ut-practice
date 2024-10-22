@@ -44,8 +44,8 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(userValidatorService.isValid(argThat(s -> s.contains("invalid")))).thenReturn(false);
-        when(userValidatorService.isValid(argThat(s -> !s.contains("invalid")))).thenReturn(true);
+        when(userValidatorService.isValid(argThat(s -> s==null || s.contains("invalid")))).thenReturn(false);
+        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
     }
 
 

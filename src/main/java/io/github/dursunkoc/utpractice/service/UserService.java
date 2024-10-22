@@ -13,6 +13,9 @@ public class UserService {
     private final UserValidatorService userValidatorService;
 
     public User createUser(UserWrite userWrite) {
+        if (userValidatorService.isValid(userWrite.username())) {
+            return User.from(userWrite);
+        }
         return null;
     }
 }
