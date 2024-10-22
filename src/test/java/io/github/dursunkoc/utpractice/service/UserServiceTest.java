@@ -44,14 +44,13 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(userValidatorService.isValid(argThat(s -> s==null || s.contains("invalid")))).thenReturn(false);
-        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
     }
 
 
     @Test
     void testCreateUserWhenRequestIsValidShouldReturnNonNull() {
         UserWrite userWrite = validRequest();
+        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
 
         User user = userService.createUser(userWrite);
 
@@ -61,6 +60,8 @@ class UserServiceTest {
     @Test
     void testCreateUserWhenRequestIsInvalidShouldThrowInvalidUserException() {
         UserWrite userWrite = inValidRequest();
+        when(userValidatorService.isValid(argThat(s -> s.contains("invalid")))).thenReturn(false);
+
         assertThrows(InvalidUserException.class, () -> userService.createUser(userWrite), "Invalid user");
     }
 
@@ -71,6 +72,7 @@ class UserServiceTest {
         final var ex = "-ex";
         final var user = new User(userWrite.username(), userWrite.first() + ex, userWrite.last() + ex);
         when(userRepository.findByUsername(userWrite.username())).thenReturn(Optional.of(user));
+        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
         // Act
         final var updatedUser = userService.createUser(userWrite);
         // Assert
@@ -85,6 +87,7 @@ class UserServiceTest {
         // Arrange
         final var userWrite = validRequest();
         when(userRepository.findByUsername(userWrite.username())).thenReturn(Optional.empty());
+        when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
         // Act
         final var user = userService.createUser(userWrite);
         // Assert

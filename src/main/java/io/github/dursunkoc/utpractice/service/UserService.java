@@ -1,6 +1,7 @@
 package io.github.dursunkoc.utpractice.service;
 
 import io.github.dursunkoc.utpractice.domain.UserWrite;
+import io.github.dursunkoc.utpractice.exception.InvalidUserException;
 import io.github.dursunkoc.utpractice.repository.UserRepository;
 import io.github.dursunkoc.utpractice.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,6 @@ public class UserService {
         if (userValidatorService.isValid(userWrite.username())) {
             return User.from(userWrite);
         }
-        return null;
+        throw new InvalidUserException("Invalid user");
     }
 }
