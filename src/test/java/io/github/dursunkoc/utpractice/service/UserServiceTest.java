@@ -82,6 +82,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).update(argThat(u ->
                 u.first().equals(userWrite.first()) &&
                         u.last().equals(userWrite.last())));
+        verify(userRepository, never()).save(any());
     }
 
     @Test
@@ -96,6 +97,7 @@ class UserServiceTest {
         // Assert
         assertNotNull(user);
         verify(userRepository, times(1)).save(any());
+        verify(userRepository, never()).update(any());
     }
 
 }
