@@ -7,6 +7,7 @@ import io.github.dursunkoc.utpractice.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -73,6 +74,7 @@ class UserServiceTest {
         final var user = new User(userWrite.username(), userWrite.first() + ex, userWrite.last() + ex);
         when(userRepository.findByUsername(userWrite.username())).thenReturn(Optional.of(user));
         when(userValidatorService.isValid(argThat(s -> s!=null && !s.contains("invalid")))).thenReturn(true);
+        when(userRepository.update(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
         // Act
         final var updatedUser = userService.createUser(userWrite);
         // Assert

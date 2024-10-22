@@ -7,6 +7,8 @@ import io.github.dursunkoc.utpractice.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -14,9 +16,15 @@ public class UserService {
     private final UserValidatorService userValidatorService;
 
     public User createUser(UserWrite userWrite) {
-        if (userValidatorService.isValid(userWrite.username())) {
-            return User.from(userWrite);
+        if (!userValidatorService.isValid(userWrite.username())) {
+            throw new InvalidUserException("Invalid user");
         }
-        throw new InvalidUserException("Invalid user");
+        Optional<User> existingUserOpt = userRepository.findByUsername(userWrite.username());
+        if (existingUserOpt.isPresent()) {
+            User user = existingUserOpt.get();
+            var updated = user.updateFrom(userWrite);
+            return userRepository.update(updated);
+        }
+        return User.from(userWrite);
     }
 }
