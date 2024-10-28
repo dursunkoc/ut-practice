@@ -18,7 +18,8 @@ public class UserValidatorService {
         UserValidationRequest userValidationRequest = new UserValidationRequest(username);
         HttpEntity<UserValidationRequest> requestEntity = new HttpEntity<>(userValidationRequest);
 
-        ResponseEntity<UserValidationResponse> response = new RestTemplate().exchange(validationServiceUrl, HttpMethod.POST, requestEntity, UserValidationResponse.class);
+        ResponseEntity<UserValidationResponse> response = new RestTemplate()
+                .exchange(validationServiceUrl, HttpMethod.POST, requestEntity, UserValidationResponse.class);
         return response.getBody().isValid();
     }
 }
