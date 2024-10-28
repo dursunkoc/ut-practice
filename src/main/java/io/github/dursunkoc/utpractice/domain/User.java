@@ -28,7 +28,12 @@ public class User {
     }
 
     public User updateFrom(UserWrite userWrite) {
-        return new User(this.username(), userWrite.first(), userWrite.last());
+        return User.builder()
+                .id(this.id)
+                .first(userWrite.first())
+                .last(userWrite.last())
+                .username(userWrite.username())
+                .build();
     }
 
     public User(String username, String first, String last) {
